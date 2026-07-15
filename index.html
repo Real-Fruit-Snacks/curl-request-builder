@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>curl Request Builder</title>
+<meta name="description" content="Build a curl command from method, headers, auth, body, and options — assembled live with correct POSIX quoting and a copy button.">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2016%2016'%3E%3Crect%20width='16'%20height='16'%20rx='3'%20fill='%23090c0d'/%3E%3Cpath%20d='M3.5%205L6.5%208L3.5%2011'%20fill='none'%20stroke='%2363f2ab'%20stroke-width='1.4'%20stroke-linecap='round'%20stroke-linejoin='round'/%3E%3Crect%20x='8'%20y='9.6'%20width='5'%20height='1.5'%20rx='0.5'%20fill='%2363f2ab'/%3E%3C/svg%3E">
+<meta name="theme-color" content="#0e1214">
+<script>(function(){try{
+var t=localStorage.getItem("curl-theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t);
+var a=localStorage.getItem("curl-accent");if(a&&"12345".indexOf(a)>-1)document.documentElement.setAttribute("data-accent",a);
+var pm=localStorage.getItem("curl-pet");document.documentElement.setAttribute("data-pet",pm==="off"?"off":(pm==="cursor"?"cursor":"float"));
+var ps=parseInt(localStorage.getItem("curl-pet-size"),10);if(ps>=16&&ps<=64)document.documentElement.style.setProperty("--pet-size",ps+"px");
+var po=parseInt(localStorage.getItem("curl-pet-opacity"),10);if(po>=15&&po<=100)document.documentElement.style.setProperty("--pet-base-opacity",(po/100).toFixed(3));
+}catch(e){}})();</script>
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+<header class="topbar">
+  <span class="manifest-label site-title">CURL REQUEST BUILDER</span>
+  <span class="topbar-actions">
+    <button id="btn-settings" class="icon-btn" title="Settings (s)" aria-label="Settings"><svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><circle cx="8" cy="8" r="2.2" stroke="currentColor" stroke-width="1.4" fill="none"/><path d="M8 1.5v2M8 12.5v2M1.5 8h2M12.5 8h2M3.4 3.4l1.4 1.4M11.2 11.2l1.4 1.4M12.6 3.4l-1.4 1.4M4.8 11.2l-1.4 1.4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></button>
+    <button id="btn-theme" class="icon-btn" title="Toggle theme (t)" aria-label="Toggle theme"><svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M13 9.5A5.5 5.5 0 1 1 6.5 3 4.5 4.5 0 0 0 13 9.5Z" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linejoin="round"/></svg></button>
+  </span>
+</header>
+<main>
+  <article class="note note-wide">
+    <header class="note-header"><h1>curl Request Builder</h1><p class="tool-desc">Build a curl command from method, headers, auth, body, and options — assembled live with correct POSIX quoting and a copy button.</p></header>
+<p>Fill in the request — the <code>curl</code> command assembles live below with every
+flag explained. Arguments are single-quoted for POSIX shells (bash, zsh).</p>
+
+<div class="cb-form">
+  <div class="cb-row">
+    <label class="manifest-label" for="cb-method">method</label>
+    <select id="cb-method">
+      <option>GET</option><option>POST</option><option>PUT</option>
+      <option>PATCH</option><option>DELETE</option><option>HEAD</option><option>OPTIONS</option>
+    </select>
+  </div>
+  <div class="cb-row">
+    <label class="manifest-label" for="cb-url">URL</label>
+    <input id="cb-url" type="text" value="https://api.example.com/v1/users"
+      autocomplete="off" spellcheck="false">
+  </div>
+  <div class="cb-row">
+    <label class="manifest-label" for="cb-headers">headers</label>
+    <textarea id="cb-headers" rows="2" spellcheck="false"
+      placeholder="Accept: application/json&#10;X-Api-Key: secret123"></textarea>
+  </div>
+  <div class="cb-row">
+    <label class="manifest-label" for="cb-auth">auth</label>
+    <span class="cb-inline">
+      <select id="cb-auth">
+        <option value="">none</option>
+        <option value="basic">basic (-u)</option>
+        <option value="bearer">bearer token</option>
+      </select>
+      <input id="cb-auth-user" type="text" placeholder="user:password" autocomplete="off"
+        spellcheck="false" hidden>
+      <input id="cb-auth-token" type="text" placeholder="token" autocomplete="off"
+        spellcheck="false" hidden>
+    </span>
+  </div>
+  <div class="cb-row" id="cb-row-ctype">
+    <label class="manifest-label" for="cb-ctype">body type</label>
+    <select id="cb-ctype">
+      <option value="">none</option>
+      <option value="json">JSON (application/json)</option>
+      <option value="form">form (x-www-form-urlencoded)</option>
+      <option value="text">text/plain</option>
+      <option value="raw">raw (no Content-Type)</option>
+    </select>
+  </div>
+  <div class="cb-row" id="cb-row-body">
+    <label class="manifest-label" for="cb-body">body</label>
+    <textarea id="cb-body" rows="3" spellcheck="false" placeholder='{"name": "Ada"}'></textarea>
+  </div>
+  <div class="cb-row">
+    <label class="manifest-label">options</label>
+    <div class="cb-checks">
+      <label class="cb-check"><input id="cb-L" type="checkbox"> follow redirects (<code>-L</code>)</label>
+      <label class="cb-check"><input id="cb-k" type="checkbox"> insecure (<code>-k</code>)</label>
+      <label class="cb-check"><input id="cb-s" type="checkbox"> silent (<code>-s</code>)</label>
+      <label class="cb-check"><input id="cb-i" type="checkbox"> include headers (<code>-i</code>)</label>
+      <label class="cb-check"><input id="cb-v" type="checkbox"> verbose (<code>-v</code>)</label>
+      <label class="cb-check"><input id="cb-compressed" type="checkbox"> compressed (<code>--compressed</code>)</label>
+    </div>
+  </div>
+  <div class="cb-row">
+    <label class="manifest-label" for="cb-out">save to file</label>
+    <input id="cb-out" type="text" placeholder="(optional) response.json — adds -o"
+      autocomplete="off" spellcheck="false">
+  </div>
+</div>
+
+<div id="cb-errors" class="cb-error" hidden></div>
+<div id="cb-summary" class="cb-summary" hidden></div>
+
+<figure class="code-block">
+<figcaption class="code-lang manifest-label">curl</figcaption>
+<pre class="code-body"><code id="cb-output"></code></pre>
+</figure>
+
+<p class="cb-note">Single quotes protect the shell on bash and zsh. In Windows
+<code>cmd.exe</code> swap them for double quotes; PowerShell needs the
+<code>--%</code> stop-parsing token (or backtick escaping) for bodies with special
+characters.</p>
+<details class="tool-learn"><summary class="manifest-label">curl 101</summary><div class="tool-learn-body"><h3>What curl does</h3>
+<p><a href="https://curl.se/">curl</a> transfers data to or from a server from the command
+line. For HTTP it's the quickest way to reproduce an API call, debug a header, or script a
+request. The builder above maps each control onto a flag; this is what they mean.</p>
+
+<h3>The core flags</h3>
+<table>
+<thead><tr><th>flag</th><th>meaning</th></tr></thead>
+<tbody>
+<tr><td><code>-X METHOD</code></td><td>set the HTTP method. GET is the default, so it's omitted; <code>-I</code> is the shortcut for a HEAD request.</td></tr>
+<tr><td><code>-H 'Name: value'</code></td><td>add a request header. Repeat it for as many as you need.</td></tr>
+<tr><td><code>--data-raw '…'</code></td><td>send a request body verbatim (and imply POST). Plain <code>-d</code> treats a leading <code>@</code> as "read a file", which <code>--data-raw</code> avoids.</td></tr>
+<tr><td><code>-u user:pass</code></td><td>HTTP basic auth. For bearer tokens use <code>-H 'Authorization: Bearer …'</code> instead.</td></tr>
+</tbody>
+</table>
+
+<h3>Handy options</h3>
+<ul>
+<li><strong><code>-L</code></strong> — follow <code>3xx</code> redirects to the final URL.</li>
+<li><strong><code>-i</code></strong> — include the response headers in the output;
+<strong><code>-v</code></strong> shows the full request/response conversation (great for debugging);
+<strong><code>-s</code></strong> silences the progress meter.</li>
+<li><strong><code>--compressed</code></strong> — request gzip/deflate and decode it for you.</li>
+<li><strong><code>-k</code></strong> — skip TLS certificate verification. Handy against a lab box with a self-signed cert; never use it against anything you actually trust.</li>
+<li><strong><code>-o file</code></strong> — write the body to a file instead of the terminal (<code>-O</code> reuses the remote filename).</li>
+</ul>
+
+<h3>Quoting</h3>
+<p>The builder single-quotes every argument, which is correct for bash and zsh: single
+quotes are literal, so JSON, spaces, and <code>&amp;</code> are all safe. On Windows
+<code>cmd.exe</code> use double quotes instead; PowerShell parses <code>-d</code>/<code>&amp;</code>
+specially, so prefix the arguments with the <code>--%</code> stop-parsing token for complex
+bodies.</p>
+
+<h3>A quick debugging recipe</h3>
+<pre><code>curl -sv -H 'Accept: application/json' https://api.example.com/health</code></pre>
+<p><code>-s</code> hides noise, <code>-v</code> shows the negotiated TLS, request headers, and
+response status — usually enough to see why a call misbehaves.</p>
+</div></details>
+  </article>
+</main>
+<footer class="footer">
+  <span class="mono">runs entirely in your browser · nothing is uploaded</span>
+  <a class="mono" href="https://github.com/Real-Fruit-Snacks/curl-request-builder" rel="noopener">source</a>
+</footer>
+
+<div id="settings-panel" class="settings-panel" role="dialog" aria-modal="true" aria-label="Settings" hidden></div>
+<div id="settings-scrim" class="settings-scrim" hidden></div>
+<div id="help-overlay" class="help-overlay" role="dialog" aria-modal="true" aria-label="Keyboard shortcuts" hidden></div>
+<div id="site-pet" aria-hidden="true"><div class="pet-tilt"><div class="pet-sprite" title="pet the ghost to recolor it"><svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path class="pet-body" d="M2 16 V7 Q2 1 8 1 Q14 1 14 7 V16 L12 14.4 L10 16 L8 14.4 L6 16 L4 14.4 Z"/><g class="pet-eyes-open"><rect x="5" y="6" width="2" height="3"/><rect x="9" y="6" width="2" height="3"/></g><g class="pet-eyes-closed"><rect x="5" y="8" width="2" height="1"/><rect x="9" y="8" width="2" height="1"/></g><g class="pet-eyes-happy"><path d="M4.6 8 L6 6.6 L7.4 8"/><path d="M8.6 8 L10 6.6 L11.4 8"/></g></svg></div></div></div>
+
+<script src="js/settings.js"></script>
+<script src="js/tool.js"></script>
+<script src="js/content.js"></script>
+<script src="js/pet.js"></script>
+</body>
+</html>
