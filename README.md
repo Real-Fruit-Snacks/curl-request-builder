@@ -24,6 +24,7 @@ ever leaves the page. Open `index.html` from a USB stick and it works.
 ## Features
 
 - Build a curl command from method, URL, headers, auth, and body.
+- Optional user agent, proxy, cookies, referer, timeouts, and retry — added only when set.
 - Covers common options and content types.
 - Copy the finished command with one click.
 - **Both themes, six accents** — dark by default, light by preference or toggle; inputs, scrollbars and focus rings all follow the theme.
