@@ -3,6 +3,7 @@
   function $(id) { return document.getElementById(id); }
   var els = {
     method: $("cb-method"), url: $("cb-url"), headers: $("cb-headers"),
+    ua: $("cb-ua"),
     auth: $("cb-auth"), user: $("cb-auth-user"), token: $("cb-auth-token"),
     ctype: $("cb-ctype"), body: $("cb-body"),
     L: $("cb-L"), k: $("cb-k"), s: $("cb-s"), i: $("cb-i"), v: $("cb-v"),
@@ -63,6 +64,9 @@
 
     headerLines().forEach(function (h) { parts.push("-H " + q(h)); });
 
+    var ua = els.ua.value.trim();
+    if (ua) parts.push("-A " + q(ua));
+
     if (els.auth.value === "basic") {
       var creds = els.user.value.trim();
       if (!creds) errors.push("enter user:password for basic auth");
@@ -111,6 +115,7 @@
       bits.push((els.ctype.value === "json" ? "a JSON" :
         els.ctype.value === "form" ? "a form" : "a") + " body");
     }
+    if (ua) bits.push("a custom user agent");
     if (els.L.checked) bits.push("following redirects");
     if (out) bits.push("saving to " + escapeHtml(out));
     els.summary.innerHTML = "Sends a <strong>" + method + "</strong> request to <strong>" +
