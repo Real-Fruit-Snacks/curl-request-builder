@@ -55,6 +55,21 @@ flag explained. Arguments are single-quoted for POSIX shells (bash, zsh).</p>
       autocomplete="off" spellcheck="false">
   </div>
   <div class="cb-row">
+    <label class="manifest-label" for="cb-proxy">proxy</label>
+    <input id="cb-proxy" type="text" placeholder="(optional) http://127.0.0.1:8080 — adds -x"
+      autocomplete="off" spellcheck="false">
+  </div>
+  <div class="cb-row">
+    <label class="manifest-label" for="cb-cookie">cookies</label>
+    <input id="cb-cookie" type="text" placeholder="(optional) name=value; other=123 — adds -b"
+      autocomplete="off" spellcheck="false">
+  </div>
+  <div class="cb-row">
+    <label class="manifest-label" for="cb-referer">referer</label>
+    <input id="cb-referer" type="text" placeholder="(optional) https://example.com — adds -e"
+      autocomplete="off" spellcheck="false">
+  </div>
+  <div class="cb-row">
     <label class="manifest-label" for="cb-auth">auth</label>
     <span class="cb-inline">
       <select id="cb-auth">
@@ -92,6 +107,28 @@ flag explained. Arguments are single-quoted for POSIX shells (bash, zsh).</p>
       <label class="cb-check"><input id="cb-v" type="checkbox"> verbose (<code>-v</code>)</label>
       <label class="cb-check"><input id="cb-compressed" type="checkbox"> compressed (<code>--compressed</code>)</label>
     </div>
+  </div>
+  <div class="cb-row">
+    <label class="manifest-label">timeouts</label>
+    <span class="cb-inline">
+      <input id="cb-conntimeout" class="cb-num" type="text" inputmode="numeric"
+        placeholder="connect (s)" autocomplete="off" spellcheck="false"
+        aria-label="connect timeout in seconds (--connect-timeout)">
+      <input id="cb-maxtime" class="cb-num" type="text" inputmode="numeric"
+        placeholder="max total (s)" autocomplete="off" spellcheck="false"
+        aria-label="max total time in seconds (--max-time)">
+    </span>
+  </div>
+  <div class="cb-row">
+    <label class="manifest-label">retry</label>
+    <span class="cb-inline">
+      <input id="cb-retry" class="cb-num" type="text" inputmode="numeric"
+        placeholder="attempts" autocomplete="off" spellcheck="false"
+        aria-label="retry attempts (--retry)">
+      <input id="cb-retrydelay" class="cb-num" type="text" inputmode="numeric"
+        placeholder="delay (s)" autocomplete="off" spellcheck="false"
+        aria-label="retry delay in seconds (--retry-delay)">
+    </span>
   </div>
   <div class="cb-row">
     <label class="manifest-label" for="cb-out">save to file</label>

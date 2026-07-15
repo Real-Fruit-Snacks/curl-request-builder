@@ -465,6 +465,7 @@ code {
   font-family: var(--twb-font-mono); font-size: 13px; padding: 5px 10px;
 }
 .cb-form input[type="text"], .cb-form textarea { flex: 1; min-width: 0; }
+.cb-form input.cb-num { flex: 0 0 auto; width: 8.5em; }
 .cb-form textarea { resize: vertical; line-height: 1.5; }
 .cb-form input:focus, .cb-form select:focus, .cb-form textarea:focus {
   outline: none; border-color: var(--twb-accent);

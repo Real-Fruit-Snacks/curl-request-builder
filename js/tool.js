@@ -3,7 +3,9 @@
   function $(id) { return document.getElementById(id); }
   var els = {
     method: $("cb-method"), url: $("cb-url"), headers: $("cb-headers"),
-    ua: $("cb-ua"),
+    ua: $("cb-ua"), proxy: $("cb-proxy"), cookie: $("cb-cookie"), referer: $("cb-referer"),
+    conntimeout: $("cb-conntimeout"), maxtime: $("cb-maxtime"),
+    retry: $("cb-retry"), retrydelay: $("cb-retrydelay"),
     auth: $("cb-auth"), user: $("cb-auth-user"), token: $("cb-auth-token"),
     ctype: $("cb-ctype"), body: $("cb-body"),
     L: $("cb-L"), k: $("cb-k"), s: $("cb-s"), i: $("cb-i"), v: $("cb-v"),
@@ -66,6 +68,12 @@
 
     var ua = els.ua.value.trim();
     if (ua) parts.push("-A " + q(ua));
+    var proxy = els.proxy.value.trim();
+    if (proxy) parts.push("-x " + q(proxy));
+    var cookie = els.cookie.value.trim();
+    if (cookie) parts.push("-b " + q(cookie));
+    var referer = els.referer.value.trim();
+    if (referer) parts.push("-e " + q(referer));
 
     if (els.auth.value === "basic") {
       var creds = els.user.value.trim();
@@ -89,6 +97,23 @@
     if (els.i.checked) parts.push("-i");
     if (els.v.checked) parts.push("-v");
     if (els.compressed.checked) parts.push("--compressed");
+
+    var ct = els.conntimeout.value.trim();
+    if (ct) { if (/^\d+(\.\d+)?$/.test(ct)) parts.push("--connect-timeout " + ct);
+              else errors.push("connect timeout must be a number of seconds"); }
+    var mt = els.maxtime.value.trim();
+    if (mt) { if (/^\d+(\.\d+)?$/.test(mt)) parts.push("-m " + mt);
+              else errors.push("max time must be a number of seconds"); }
+    var rt = els.retry.value.trim();
+    if (rt) { if (/^\d+$/.test(rt)) parts.push("--retry " + rt);
+              else errors.push("retry attempts must be a whole number"); }
+    var rd = els.retrydelay.value.trim();
+    if (rd) {
+      if (!/^\d+$/.test(rd)) errors.push("retry delay must be a whole number of seconds");
+      else if (!rt) errors.push("retry delay needs a retry count");
+      else parts.push("--retry-delay " + rd);
+    }
+
     var out = els.out.value.trim();
     if (out) parts.push("-o " + q(out));
 
@@ -116,6 +141,10 @@
         els.ctype.value === "form" ? "a form" : "a") + " body");
     }
     if (ua) bits.push("a custom user agent");
+    if (proxy) bits.push("a proxy");
+    if (cookie) bits.push("cookies");
+    if (referer) bits.push("a referer");
+    if (rt && /^\d+$/.test(rt)) bits.push("up to " + rt + " retries");
     if (els.L.checked) bits.push("following redirects");
     if (out) bits.push("saving to " + escapeHtml(out));
     els.summary.innerHTML = "Sends a <strong>" + method + "</strong> request to <strong>" +
